@@ -10,7 +10,7 @@ import {
 
   guardarPedido,
 
-  obtenerPedidos,
+  escucharPedidos,
 
   actualizarPedido
 
@@ -34,40 +34,38 @@ function App() {
 
   useEffect(() => {
 
-    cargarPedidos();
+    const unsubscribe =
+      escucharPedidos((pedidosFirebase) => {
+
+        const pendientes =
+          pedidosFirebase.filter(
+
+            (pedido) =>
+              pedido.estado === "Pendiente"
+
+          );
+
+        const atendidos =
+          pedidosFirebase.filter(
+
+            (pedido) =>
+              pedido.estado === "Atendido"
+
+          );
+
+        setPedidosPendientes(
+          pendientes
+        );
+
+        setPedidosAtendidos(
+          atendidos
+        );
+
+      });
+
+    return () => unsubscribe();
 
   }, []);
-
-  const cargarPedidos = async () => {
-
-    const pedidosFirebase =
-      await obtenerPedidos();
-
-    const pendientes =
-      pedidosFirebase.filter(
-
-        (pedido) =>
-          pedido.estado === "Pendiente"
-
-      );
-
-    const atendidos =
-      pedidosFirebase.filter(
-
-        (pedido) =>
-          pedido.estado === "Atendido"
-
-      );
-
-    setPedidosPendientes(
-      pendientes
-    );
-
-    setPedidosAtendidos(
-      atendidos
-    );
-
-  };
 
   const iniciarSesion = (usuario) => {
 
@@ -236,8 +234,6 @@ function App() {
 
       );
 
-      await cargarPedidos();
-
       setPedidoActual([]);
 
       setPedidoEditando(null);
@@ -278,8 +274,6 @@ function App() {
     await guardarPedido(
       nuevoPedido
     );
-
-    await cargarPedidos();
 
     setPedidoActual([]);
 
@@ -336,8 +330,6 @@ function App() {
       }
 
     );
-
-    await cargarPedidos();
 
   };
 

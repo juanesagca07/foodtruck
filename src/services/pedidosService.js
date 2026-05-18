@@ -4,11 +4,11 @@ import {
 
   addDoc,
 
-  getDocs,
-
   updateDoc,
 
-  doc
+  doc,
+
+  onSnapshot
 
 } from "firebase/firestore";
 
@@ -46,32 +46,33 @@ export const guardarPedido = async (
 
 };
 
-export const obtenerPedidos = async () => {
+export const escucharPedidos = (
+  callback
+) => {
 
-  try {
+  return onSnapshot(
 
-    const data = await getDocs(
-      pedidosCollection
-    );
+    pedidosCollection,
 
-    return data.docs.map((doc) => ({
+    (snapshot) => {
 
-      firebaseId: doc.id,
+      const pedidos = snapshot.docs.map(
 
-      ...doc.data()
+        (doc) => ({
 
-    }));
+          firebaseId: doc.id,
 
-  } catch (error) {
+          ...doc.data()
 
-    console.error(
-      "Error obteniendo pedidos:",
-      error
-    );
+        })
 
-    return [];
+      );
 
-  }
+      callback(pedidos);
+
+    }
+
+  );
 
 };
 
