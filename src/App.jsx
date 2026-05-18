@@ -6,6 +6,8 @@ import Menu from "./pages/Menu";
 import Pedidos from "./pages/Pedidos";
 import Ventas from "./pages/Ventas";
 
+import { guardarPedido } from "./services/pedidosService";
+
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
   const [pantalla, setPantalla] = useState("login");
@@ -84,7 +86,7 @@ function App() {
     0
   );
 
-  const confirmarPedido = () => {
+  const confirmarPedido = async () => {
     if (pedidoActual.length === 0) {
       alert("Agrega productos primero");
       return;
@@ -122,6 +124,9 @@ function App() {
     };
 
     setPedidosPendientes([...pedidosPendientes, nuevoPedido]);
+
+    await guardarPedido(nuevoPedido);
+
     setPedidoActual([]);
     setMetodoPago("Efectivo");
     setPantalla("pedidos");
@@ -204,6 +209,8 @@ function App() {
       />
     );
   }
+
+  return <Login iniciarSesion={iniciarSesion} />;
 }
 
 export default App;
