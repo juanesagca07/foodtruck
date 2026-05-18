@@ -1,6 +1,41 @@
+import { useState } from "react";
+
+import {
+  productos,
+  categorias
+} from "../data/productos";
+
+import ProductCard from "../components/ProductCard";
+
+import PedidoItem from "../components/PedidoItem";
+
 function Menu({
-  cambiarPantalla
+
+  cambiarPantalla,
+
+  pedidoActual,
+
+  agregarProducto,
+
+  quitarProducto,
+
+  confirmarPedido,
+
+  totalPedido
+
 }) {
+
+  const [categoriaActiva, setCategoriaActiva] = useState(
+    "Hamburguesas"
+  );
+
+  const productosFiltrados = productos.filter(
+
+    (producto) =>
+
+      producto.categoria === categoriaActiva
+
+  );
 
   return (
 
@@ -18,7 +53,7 @@ function Menu({
 
           <p>
 
-            Sistema funcionando correctamente
+            Agrega productos al pedido
 
           </p>
 
@@ -37,51 +72,106 @@ function Menu({
 
       </header>
 
-      <section className="dashboard-grid">
+      <section className="menu-layout">
 
-        <article className="dashboard-card">
+        <div>
+
+          <div className="category-tabs">
+
+            {categorias.map((categoria) => (
+
+              <button
+                key={categoria}
+                className={
+                  categoriaActiva === categoria
+                    ? "active-tab"
+                    : ""
+                }
+                onClick={() =>
+                  setCategoriaActiva(categoria)
+                }
+              >
+
+                {categoria}
+
+              </button>
+
+            ))}
+
+          </div>
+
+          <div className="products-grid">
+
+            {productosFiltrados.map((producto) => (
+
+              <ProductCard
+                key={producto.id}
+                producto={producto}
+                agregarProducto={agregarProducto}
+              />
+
+            ))}
+
+          </div>
+
+        </div>
+
+        <aside className="order-panel">
 
           <h2>
 
-            Pájaro Loco
+            Pedido Actual
 
           </h2>
 
-          <p>
+          {pedidoActual.length === 0 ? (
 
-            Hamburguesa especial
+            <p className="empty-text">
 
-          </p>
+              No hay productos agregados
 
-          <strong>
+            </p>
 
-            $15.000
+          ) : (
 
-          </strong>
+            pedidoActual.map((item) => (
 
-        </article>
+              <PedidoItem
+                key={item.itemId}
+                item={item}
+                quitarProducto={quitarProducto}
+              />
 
-        <article className="dashboard-card">
+            ))
 
-          <h2>
+          )}
 
-            Perra Especial
+          <div className="total-box">
 
-          </h2>
+            <span>
 
-          <p>
+              Total
 
-            Salchicha ranchera
+            </span>
 
-          </p>
+            <strong>
 
-          <strong>
+              ${totalPedido.toLocaleString()}
 
-            $12.000
+            </strong>
 
-          </strong>
+          </div>
 
-        </article>
+          <button
+            className="primary-btn"
+            onClick={confirmarPedido}
+          >
+
+            Confirmar pedido
+
+          </button>
+
+        </aside>
 
       </section>
 
