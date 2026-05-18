@@ -56,9 +56,9 @@ export const obtenerPedidos = async () => {
 
     return data.docs.map((doc) => ({
 
-      ...doc.data(),
+      firebaseId: doc.id,
 
-      firebaseId: doc.id
+      ...doc.data()
 
     }));
 
