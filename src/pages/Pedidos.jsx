@@ -23,72 +23,48 @@ function Pedidos({
 
       <section className="orders-layout">
         <div>
-          <h2 className="section-title">
-            Pendientes
-          </h2>
+          <h2 className="section-title">Pendientes</h2>
 
           {pedidosPendientes.length === 0 ? (
-            <p className="empty-text">
-              No hay pedidos pendientes
-            </p>
+            <p className="empty-text">No hay pedidos pendientes</p>
           ) : (
             pedidosPendientes.map((pedido) => (
-              <article
-                className="ticket-card"
-                key={pedido.id}
-              >
+              <article className="ticket-card" key={pedido.id}>
                 <div className="ticket-header">
-                  <h3>
-                    Pedido #{pedido.numero}
-                  </h3>
-
-                  <span>
-                    {pedido.fecha}
-                  </span>
+                  <h3>Pedido #{pedido.numero}</h3>
+                  <span>{pedido.fecha}</span>
                 </div>
 
                 <div className="ticket-body">
                   {pedido.productos.map((item) => (
-                    <div
-                      className="ticket-line"
-                      key={item.itemId}
-                    >
+                    <div className="ticket-line" key={item.itemId}>
                       <div>
                         <strong>
                           {item.nombre} x{item.cantidad}
                         </strong>
 
                         {item.observacion && (
-                          <small>
-                            Obs: {item.observacion}
-                          </small>
+                          <small>Obs: {item.observacion}</small>
                         )}
                       </div>
 
                       <span>
-                        ${(
-                          item.precio * item.cantidad
-                        ).toLocaleString()}
+                        ${(item.precio * item.cantidad).toLocaleString()}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                <div className="ticket-total">
-                  <strong>TOTAL</strong>
-
-                  <strong>
-                    ${pedido.total.toLocaleString()}
-                  </strong>
+                <div className="payment-ticket">
+                  Pago: <strong>{pedido.metodoPago || "Efectivo"}</strong>
                 </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "10px",
-                    marginTop: "15px",
-                  }}
-                >
+                <div className="ticket-total">
+                  <strong>TOTAL</strong>
+                  <strong>${pedido.total.toLocaleString()}</strong>
+                </div>
+
+                <div className="ticket-actions">
                   <button
                     className="primary-btn"
                     onClick={() => editarPedido(pedido)}
@@ -98,9 +74,7 @@ function Pedidos({
 
                   <button
                     className="secondary-btn"
-                    onClick={() =>
-                      marcarAtendido(pedido.id)
-                    }
+                    onClick={() => marcarAtendido(pedido.id)}
                   >
                     Marcar atendido
                   </button>
@@ -111,36 +85,25 @@ function Pedidos({
         </div>
 
         <div>
-          <h2 className="section-title">
-            Atendidos
-          </h2>
+          <h2 className="section-title">Atendidos</h2>
 
           {pedidosAtendidos.length === 0 ? (
-            <p className="empty-text">
-              No hay pedidos atendidos
-            </p>
+            <p className="empty-text">No hay pedidos atendidos</p>
           ) : (
             pedidosAtendidos.map((pedido) => (
-              <article
-                className="ticket-card attended"
-                key={pedido.id}
-              >
+              <article className="ticket-card attended" key={pedido.id}>
                 <div className="ticket-header">
-                  <h3>
-                    Pedido #{pedido.numero}
-                  </h3>
+                  <h3>Pedido #{pedido.numero}</h3>
+                  <span>{pedido.fechaAtendido}</span>
+                </div>
 
-                  <span>
-                    {pedido.fechaAtendido}
-                  </span>
+                <div className="payment-ticket">
+                  Pago: <strong>{pedido.metodoPago || "Efectivo"}</strong>
                 </div>
 
                 <div className="ticket-total">
                   <strong>TOTAL</strong>
-
-                  <strong>
-                    ${pedido.total.toLocaleString()}
-                  </strong>
+                  <strong>${pedido.total.toLocaleString()}</strong>
                 </div>
               </article>
             ))
