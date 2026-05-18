@@ -1,3 +1,11 @@
+import pajaroLoco from "../assets/img/pajaro-loco.png";
+
+import pingui from "../assets/img/pingui.png";
+
+import perra from "../assets/img/perra.png";
+
+import supersalchipapa from "../assets/img/supersalchipapa.png";
+
 export const productos = [
 
   {
@@ -6,7 +14,8 @@ export const productos = [
     categoria: "Hamburguesas",
     precio: 15000,
     descripcion: "Hamburguesa especial de la casa",
-    disponible: true
+    disponible: true,
+    imagen: pajaroLoco
   },
 
   {
@@ -15,7 +24,8 @@ export const productos = [
     categoria: "Hamburguesas",
     precio: 17000,
     descripcion: "Hamburguesa con pig desmechado",
-    disponible: false
+    disponible: false,
+    imagen: pingui
   },
 
   {
@@ -24,7 +34,8 @@ export const productos = [
     categoria: "Perros",
     precio: 12000,
     descripcion: "Salchicha ranchera y queso",
-    disponible: true
+    disponible: true,
+    imagen: perra
   },
 
   {
@@ -33,7 +44,8 @@ export const productos = [
     categoria: "Salchipapas",
     precio: 20000,
     descripcion: "Papas, salchicha y tocineta",
-    disponible: true
+    disponible: true,
+    imagen: supersalchipapa
   }
 
 ];
