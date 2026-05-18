@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Menu from "./pages/Menu";
@@ -7,10 +8,30 @@ import Ventas from "./pages/Ventas";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
+
   const [pantalla, setPantalla] = useState("login");
+
   const [pedidoActual, setPedidoActual] = useState([]);
-  const [pedidosPendientes, setPedidosPendientes] = useState([]);
-  const [pedidosAtendidos, setPedidosAtendidos] = useState([]);
+
+  const [pedidosPendientes, setPedidosPendientes] = useState(() => {
+    return JSON.parse(localStorage.getItem("pedidosPendientes")) || [];
+  });
+
+  const [pedidosAtendidos, setPedidosAtendidos] = useState(() => {
+    return JSON.parse(localStorage.getItem("pedidosAtendidos")) || [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "pedidosPendientes",
+      JSON.stringify(pedidosPendientes)
+    );
+
+    localStorage.setItem(
+      "pedidosAtendidos",
+      JSON.stringify(pedidosAtendidos)
+    );
+  }, [pedidosPendientes, pedidosAtendidos]);
 
   const iniciarSesion = (usuario) => {
     setUsuarioActivo(usuario);
@@ -23,25 +44,29 @@ function App() {
     setPantalla("login");
   };
 
-  const agregarProducto = (producto, observacion) => {
-    const nuevoItem = {
-      ...producto,
-      itemId: Date.now(),
-      observacion,
-    };
-
-    setPedidoActual([...pedidoActual, nuevoItem]);
+const agregarProducto = (producto, observacion) => {
+  const nuevoItem = {
+    ...producto,
+    itemId: Date.now(),
+    observacion: observacion.trim(),
   };
 
+  setPedidoActual([...pedidoActual, nuevoItem]);
+};
   const quitarProducto = (itemId) => {
-    setPedidoActual(pedidoActual.filter((item) => item.itemId !== itemId));
+    setPedidoActual(
+      pedidoActual.filter((item) => item.itemId !== itemId)
+    );
   };
 
-  const totalPedido = pedidoActual.reduce((total, item) => total + item.precio, 0);
+  const totalPedido = pedidoActual.reduce(
+    (total, item) => total + item.precio,
+    0
+  );
 
   const confirmarPedido = () => {
     if (pedidoActual.length === 0) {
-      alert("Agrega productos antes de confirmar el pedido.");
+      alert("Agrega productos primero");
       return;
     }
 
@@ -60,7 +85,9 @@ function App() {
   };
 
   const marcarAtendido = (idPedido) => {
-    const pedido = pedidosPendientes.find((pedido) => pedido.id === idPedido);
+    const pedido = pedidosPendientes.find(
+      (pedido) => pedido.id === idPedido
+    );
 
     if (!pedido) return;
 
@@ -70,7 +97,10 @@ function App() {
       fechaAtendido: new Date().toLocaleString(),
     };
 
-    setPedidosPendientes(pedidosPendientes.filter((pedido) => pedido.id !== idPedido));
+    setPedidosPendientes(
+      pedidosPendientes.filter((pedido) => pedido.id !== idPedido)
+    );
+
     setPedidosAtendidos([...pedidosAtendidos, pedidoAtendido]);
   };
 
