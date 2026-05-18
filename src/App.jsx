@@ -8,9 +8,7 @@ import Ventas from "./pages/Ventas";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
-
   const [pantalla, setPantalla] = useState("login");
-
   const [pedidoActual, setPedidoActual] = useState([]);
 
   const [pedidosPendientes, setPedidosPendientes] = useState(() => {
@@ -22,15 +20,8 @@ function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem(
-      "pedidosPendientes",
-      JSON.stringify(pedidosPendientes)
-    );
-
-    localStorage.setItem(
-      "pedidosAtendidos",
-      JSON.stringify(pedidosAtendidos)
-    );
+    localStorage.setItem("pedidosPendientes", JSON.stringify(pedidosPendientes));
+    localStorage.setItem("pedidosAtendidos", JSON.stringify(pedidosAtendidos));
   }, [pedidosPendientes, pedidosAtendidos]);
 
   const iniciarSesion = (usuario) => {
@@ -44,23 +35,58 @@ function App() {
     setPantalla("login");
   };
 
-const agregarProducto = (producto, observacion) => {
-  const nuevoItem = {
-    ...producto,
-    itemId: Date.now(),
-    observacion: observacion.trim(),
+  const agregarProducto = (producto, observacion = "") => {
+    const obs = observacion.trim();
+
+    const itemExistente = pedidoActual.find(
+      (item) => item.id === producto.id && item.observacion === obs
+    );
+
+    if (itemExistente) {
+      const actualizado = pedidoActual.map((item) => {
+        if (item.id === producto.id && item.observacion === obs) {
+          return {
+            ...item,
+            cantidad: item.cantidad + 1,
+          };
+        }
+
+        return item;
+      });
+
+      setPedidoActual(actualizado);
+      return;
+    }
+
+    const nuevoItem = {
+      ...producto,
+      itemId: Date.now(),
+      cantidad: 1,
+      observacion: obs,
+    };
+
+    setPedidoActual([...pedidoActual, nuevoItem]);
   };
 
-  setPedidoActual([...pedidoActual, nuevoItem]);
-};
   const quitarProducto = (itemId) => {
-    setPedidoActual(
-      pedidoActual.filter((item) => item.itemId !== itemId)
-    );
+    const actualizado = pedidoActual
+      .map((item) => {
+        if (item.itemId === itemId) {
+          return {
+            ...item,
+            cantidad: item.cantidad - 1,
+          };
+        }
+
+        return item;
+      })
+      .filter((item) => item.cantidad > 0);
+
+    setPedidoActual(actualizado);
   };
 
   const totalPedido = pedidoActual.reduce(
-    (total, item) => total + item.precio,
+    (total, item) => total + item.precio * item.cantidad,
     0
   );
 
@@ -85,9 +111,7 @@ const agregarProducto = (producto, observacion) => {
   };
 
   const marcarAtendido = (idPedido) => {
-    const pedido = pedidosPendientes.find(
-      (pedido) => pedido.id === idPedido
-    );
+    const pedido = pedidosPendientes.find((pedido) => pedido.id === idPedido);
 
     if (!pedido) return;
 

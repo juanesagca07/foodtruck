@@ -2,16 +2,17 @@ function PedidoItem({ item, quitarProducto }) {
   return (
     <div className="pedido-item">
       <div>
-        <strong>{item.nombre}</strong>
-        <p>${item.precio.toLocaleString()}</p>
+        <strong>
+          {item.nombre} x{item.cantidad}
+        </strong>
 
-        {item.observacion && (
-          <small>Obs: {item.observacion}</small>
-        )}
+        <p>${(item.precio * item.cantidad).toLocaleString()}</p>
+
+        {item.observacion && <small>Obs: {item.observacion}</small>}
       </div>
 
       <button onClick={() => quitarProducto(item.itemId)}>
-        X
+        -
       </button>
     </div>
   );
