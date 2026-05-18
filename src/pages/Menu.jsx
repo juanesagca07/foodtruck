@@ -2,27 +2,20 @@ import { useState } from "react";
 
 import {
   productos,
-  categorias
+  categorias,
 } from "../data/productos";
 
 import ProductCard from "../components/ProductCard";
-
 import PedidoItem from "../components/PedidoItem";
 
 function Menu({
-
   cambiarPantalla,
-
   pedidoActual,
-
   agregarProducto,
-
   quitarProducto,
-
   confirmarPedido,
-
-  totalPedido
-
+  totalPedido,
+  pedidoEditando,
 }) {
 
   const [categoriaActiva, setCategoriaActiva] = useState(
@@ -30,15 +23,11 @@ function Menu({
   );
 
   const productosFiltrados = productos.filter(
-
     (producto) =>
-
       producto.categoria === categoriaActiva
-
   );
 
   return (
-
     <main className="page">
 
       <header className="topbar">
@@ -46,15 +35,13 @@ function Menu({
         <div>
 
           <h1>
-
             Menú FoodTruck
-
           </h1>
 
           <p>
-
-            Agrega productos al pedido
-
+            {pedidoEditando
+              ? `Editando pedido #${pedidoEditando.numero}`
+              : "Agrega productos al pedido"}
           </p>
 
         </div>
@@ -65,9 +52,7 @@ function Menu({
             cambiarPantalla("dashboard")
           }
         >
-
           Volver
-
         </button>
 
       </header>
@@ -91,9 +76,7 @@ function Menu({
                   setCategoriaActiva(categoria)
                 }
               >
-
                 {categoria}
-
               </button>
 
             ))}
@@ -119,17 +102,13 @@ function Menu({
         <aside className="order-panel">
 
           <h2>
-
             Pedido Actual
-
           </h2>
 
           {pedidoActual.length === 0 ? (
 
             <p className="empty-text">
-
               No hay productos agregados
-
             </p>
 
           ) : (
@@ -149,15 +128,11 @@ function Menu({
           <div className="total-box">
 
             <span>
-
               Total
-
             </span>
 
             <strong>
-
               ${totalPedido.toLocaleString()}
-
             </strong>
 
           </div>
@@ -167,7 +142,9 @@ function Menu({
             onClick={confirmarPedido}
           >
 
-            Confirmar pedido
+            {pedidoEditando
+              ? "Guardar cambios"
+              : "Confirmar pedido"}
 
           </button>
 
@@ -176,7 +153,6 @@ function Menu({
       </section>
 
     </main>
-
   );
 
 }
