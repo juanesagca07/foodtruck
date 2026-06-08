@@ -1,16 +1,11 @@
 const mysql = require("mysql2");
 
 const db = mysql.createPool({
-  host: process.env.MYSQLHOST || "localhost",
-
-  user: process.env.MYSQLUSER || "root",
-
-  password: process.env.MYSQLPASSWORD || "1234",
-
-  database: process.env.MYSQLDATABASE || "foodtruck_db",
-
-  port: process.env.MYSQLPORT || 3306,
-
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -22,8 +17,7 @@ db.getConnection((error, connection) => {
     return;
   }
 
-  console.log("Conectado a MySQL");
-
+  console.log("Conectado a Railway MySQL");
   connection.release();
 });
 

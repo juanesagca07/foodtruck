@@ -1,10 +1,9 @@
 {
   "name": "api-foodtruck",
   "version": "1.0.0",
-  "main": "server.cjs",
   "scripts": {
-    "start": "node server.cjs",
-    "dev": "node server.cjs"
+    "dev": "node server.cjs",
+    "start": "node server.cjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
