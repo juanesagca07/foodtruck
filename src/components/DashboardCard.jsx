@@ -2,38 +2,26 @@ function DashboardCard({
   title,
   description,
   value,
-  onClick
+  icon,
+  variant = "",
+  onClick,
 }) {
-
   return (
-
-    <button
-      className="dashboard-card"
+    <article
+      className={`dashboard-card ${variant}`}
       onClick={onClick}
     >
+      <div className="dashboard-card-content">
+        {icon && <span className="dashboard-card-icon">{icon}</span>}
 
-      <h2>
+        <h2>{title}</h2>
 
-        {title}
+        <p>{description}</p>
 
-      </h2>
-
-      <p>
-
-        {description}
-
-      </p>
-
-      <strong>
-
-        {value}
-
-      </strong>
-
-    </button>
-
+        <strong>{value}</strong>
+      </div>
+    </article>
   );
-
 }
 
 export default DashboardCard;

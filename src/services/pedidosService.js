@@ -1,106 +1,36 @@
-import {
+import api from "./api";
 
-  collection,
-
-  addDoc,
-
-  updateDoc,
-
-  doc,
-
-  onSnapshot
-
-} from "firebase/firestore";
-
-import { db } from "../firebase/firebaseConfig";
-
-const pedidosCollection = collection(
-  db,
-  "pedidos"
-);
-
-export const guardarPedido = async (
-  pedido
-) => {
-
-  try {
-
-    const respuesta = await addDoc(
-
-      pedidosCollection,
-
-      pedido
-
-    );
-
-    return respuesta.id;
-
-  } catch (error) {
-
-    console.error(
-      "Error guardando pedido:",
-      error
-    );
-
-  }
-
+export const obtenerPedidos = async () => {
+  const respuesta = await api.get("/pedidos");
+  return respuesta.data;
 };
 
-export const escucharPedidos = (
-  callback
-) => {
-
-  return onSnapshot(
-
-    pedidosCollection,
-
-    (snapshot) => {
-
-      const pedidos = snapshot.docs.map(
-
-        (doc) => ({
-
-          firebaseId: doc.id,
-
-          ...doc.data()
-
-        })
-
-      );
-
-      callback(pedidos);
-
-    }
-
-  );
-
+export const guardarPedido = async (pedido) => {
+  const respuesta = await api.post("/pedidos", pedido);
+  return respuesta.data;
 };
 
-export const actualizarPedido = async (
-  firebaseId,
-  datos
-) => {
+export const actualizarPedidoCompleto = async (id, pedido) => {
+  const respuesta = await api.put(`/pedidos/${id}`, pedido);
+  return respuesta.data;
+};
 
-  try {
+export const actualizarPedido = async (id, estado) => {
+  const respuesta = await api.put(`/pedidos/${id}/estado`, { estado });
+  return respuesta.data;
+};
 
-    const pedidoRef = doc(
-      db,
-      "pedidos",
-      firebaseId
-    );
+export const eliminarPedido = async (id) => {
+  const respuesta = await api.delete(`/pedidos/${id}`);
+  return respuesta.data;
+};
 
-    await updateDoc(
-      pedidoRef,
-      datos
-    );
+export const cerrarDia = async () => {
+  const respuesta = await api.put("/cierrediario");
+  return respuesta.data;
+};
 
-  } catch (error) {
-
-    console.error(
-      "Error actualizando pedido:",
-      error
-    );
-
-  }
-
+export const obtenerHistorialPorFecha = async (fecha) => {
+  const respuesta = await api.get(`/historial?fecha=${fecha}`);
+  return respuesta.data;
 };
